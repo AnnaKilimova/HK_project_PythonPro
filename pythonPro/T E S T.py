@@ -1,63 +1,60 @@
-class TypeCheckedMeta(type):
-    def __new__(cls, name, bases, class_dict):
-        cls_obj = super().__new__(cls, name, bases, class_dict)
-        cls_obj._type_annotations = class_dict.get('__annotations__', {})
-        return cls_obj
+import xml.etree.ElementTree as ET
 
-    def __call__(cls, *args, **kwargs):
-        # Создаем экземпляр класса
-        instance = super().__call__(*args, **kwargs)
+def load_books(file_path):
+    """Чтение данных из XML-файла"""
+    try:
+        tree = ET.parse(file_path)
+        return tree
+    except FileNotFoundError:
+        print(f"File {file_path} is not found!")
+        return None
 
-        # Переопределяем метод __setattr__ для экземпляра
-        def setattr_check(self, key, value):
-            if key in cls._type_annotations:
-                expected_type = cls._type_annotations[key]
-                if not isinstance(value, expected_type):
-                    raise TypeError(
-                        f"Для атрибута '{key}' очікується тип '{expected_type.__name__}', але отримано '{type(value).__name__}'.")
-            super(cls, self).__setattr__(key, value)
+def list_available_books(root):
+    """Вывод списка доступных продуктов"""
+    if root is None:
+        return
+    print("Available products:")
+    for product in root.findall('product'):
+        name = product.find('name').text
+        quantity = product.find('quantity').text
+        print(f"- {name}: {quantity} units available")
 
-        # Присваиваем новый метод __setattr__ экземпляру
-        instance.__setattr__ = setattr_check.__get__(instance)
-        return instance
+def add_book(root, name, price, quantity):
+    """Добавление нового продукта в XML"""
+    # Создаем новый элемент продукта
+    new_product = ET.Element("product")
+    ET.SubElement(new_product, "name").text = name
+    ET.SubElement(new_product, "price").text = str(price)
+    ET.SubElement(new_product, "quantity").text = str(quantity)
 
+    # Добавляем новый продукт в корень
+    root.getroot().append(new_product)
 
-# Тестовый класс
-class Person(metaclass=TypeCheckedMeta):
-    name: str = ""
-    age: int = 0
+def save_books(tree, file_path):
+    """Сохранение изменений в XML-файл"""
+    tree.write(file_path, encoding="utf-8", xml_declaration=True)
 
+if __name__ == "__main__":
+    file_path = "data.xml"
 
-class TypeCheckedMeta(type):
-    def __new__(cls, name, bases, class_dict):
-        cls_obj = super().__new__(cls, name, bases, class_dict)
-        cls_obj._type_annotations = class_dict.get('__annotations__', {})
-        return cls_obj
+    # Чтение книг из файла
+    tree = load_books(file_path)
+    if tree is not None:
+        root = tree.getroot()
 
-    def __call__(cls, *args, **kwargs):
-        # Создаем экземпляр класса
-        instance = super().__call__(*args, **kwargs)
+        # Вывод доступных продуктов
+        list_available_books(root)
 
-        # Переопределяем метод __setattr__ для экземпляра
-        def setattr_check(self, key, value):
-            if key in cls._type_annotations:
-                expected_type = cls._type_annotations[key]
-                if not isinstance(value, expected_type):
-                    raise TypeError(
-                        f"Для атрибута '{key}' очікується тип '{expected_type.__name__}', але отримано '{type(value).__name__}'.")
-            super(cls, self).__setattr__(key, value)
+        # Получение информации о новом продукте
+        new_book_name = input("Enter the name of the new product: ")
+        new_book_price = input("Enter the price of the product: ")
+        new_book_quantity = input("Enter the quantity of the product: ")
 
-        # Присваиваем новый метод __setattr__ экземпляру
-        instance.__setattr__ = setattr_check.__get__(instance)
-        return instance
+        # Добавление нового продукта
+        add_book(tree, new_book_name, new_book_price, new_book_quantity)
 
+        # Сохранение изменений
+        save_books(tree, file_path)
 
-class Person(metaclass=TypeCheckedMeta):
-    name: str = ""
-    age: int = 0
-
-
-p = Person()
-p.name = "John"  # Все добре
-p.age = "30"  # Викличе помилку, очікується int
+        print(f"The product '{new_book_name}' has been successfully added.")
 
