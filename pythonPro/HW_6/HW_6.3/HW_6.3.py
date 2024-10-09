@@ -1,28 +1,29 @@
-'''Завдання 3: Робота з CSV файлами
+"""Завдання 3: Робота з CSV файлами
 1. Створи CSV-файл з даними про студентів, де кожен рядок містить:
 • Ім'я студента  • Вік  • Оцінку
 2. Напиши програму, яка:
-• Читає дані з CSV-файлу  • Виводить середню оцінку студентів  • Додає нового студента до файлу.'''
+• Читає дані з CSV-файлу  • Виводить середню оцінку студентів  • Додає нового студента до файлу."""
 
 import csv
 
 
 # Create a CSV file with student data.
-with open('data.csv', mode='w', newline='') as file:
+with open("data.csv", mode="w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(["Name", "Age", "Mark"])
     writer.writerow(["Alice", 30, 90])
     writer.writerow(["Bob", 25, 80])
 
-file_path = 'data.csv'
+file_path = "data.csv"
+
 
 def calculate_average_grade(file_path):
-    '''Function for calculating the average grade of students.'''
+    """Function for calculating the average grade of students."""
     total_grade = 0
     student_count = 0
 
     # Read data from a CSV file.
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             total_grade += int(row["Mark"])  # Add the mark to the total amount.
@@ -37,15 +38,15 @@ def calculate_average_grade(file_path):
 
 
 def add_student(file_path, name, age, mark):
-    '''
+    """
     Function to add a new student to a CSV file
     :param file_path: file_path.
     :param name: str.
     :param age: int.
     :param mark: int.
-    '''
+    """
 
-    with open(file_path, 'a', newline='', encoding='utf-8') as file:
+    with open(file_path, "a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow([name, age, mark])
     print(f"Student {name} was successfully added.")
@@ -64,7 +65,7 @@ add_student(file_path, name, age, mark)
 calculate_average_grade(file_path)
 
 # Reading data from a CSV file.
-with open('data.csv', mode='r') as file:
+with open("data.csv", mode="r") as file:
     reader = csv.reader(file)
     for row in reader:
         print(row)

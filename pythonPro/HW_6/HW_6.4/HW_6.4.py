@@ -1,8 +1,8 @@
-'''Робота з JSON
+"""Робота з JSON
 Створи JSON-файл з інформацією про книги, кожна книга повинна мати:
 • Назву • Автора • Рік видання • Наявність (True або False)
 Напиши програму, яка:
-• Завантажує JSON-файл. • Виводить список доступних книг (наявність True). • Додає нову книгу в цей файл.'''
+• Завантажує JSON-файл. • Виводить список доступних книг (наявність True). • Додає нову книгу в цей файл."""
 
 import json
 
@@ -10,7 +10,7 @@ import json
 # Uploading a JSON file
 def load_books(file_path):
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError:
         print(f"File {file_path} is not found!")
@@ -36,7 +36,7 @@ def add_book(file_path, new_book):
     books = load_books(file_path)
     books.append(new_book)
 
-    with open(file_path, 'w', encoding='utf-8') as file:
+    with open(file_path, "w", encoding="utf-8") as file:
         json.dump(books, file, ensure_ascii=False, indent=4)
 
     print(f"The '{new_book['name']}' book successfully has been added to the file.")
@@ -56,13 +56,13 @@ if __name__ == "__main__":
     new_book_title = input("Enter the name of new book: ")
     new_book_author = input("Enter the author of the book: ")
     new_book_year = int(input("Enter the year of the book: "))
-    new_book_availability = input("Is the book in stock?? (yes/no): ").lower() == 'yes'
+    new_book_availability = (input("Is the book in stock?? (yes/no): ").lower() == "yes")
 
     new_book = {
         "name": new_book_title,
         "author": new_book_author,
         "year": new_book_year,
-        "availability": new_book_availability
+        "availability": new_book_availability,
     }
 
     # Add a new book to a file
