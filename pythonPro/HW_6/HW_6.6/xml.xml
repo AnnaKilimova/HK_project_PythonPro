@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<heroes>
+    <hero>
+        <hero_name>batman</hero_name>
+        <description>uses technology</description>
+    </hero>
+    <hero>
+        <hero_name>superman</hero_name>
+        <description>flies through the air</description>
+    </hero>
+</heroes>
